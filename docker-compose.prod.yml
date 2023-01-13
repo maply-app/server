@@ -18,7 +18,7 @@ services:
     env_file:
       - .env
     volumes:
-      - media_volume:/usr/src/app/media"
+      - media_volume:/usr/src/app/media
     depends_on:
       - postgresql
       - redis
@@ -28,7 +28,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - media_volume:/usr/src/app/media"
+      - media_volume:/usr/src/app
     depends_on:
       - web
 
