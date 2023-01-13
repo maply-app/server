@@ -1,0 +1,6 @@
+./app/media
+postgres-data
+
+# builds
+./app/bin
+
