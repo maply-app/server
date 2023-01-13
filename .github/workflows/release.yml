@@ -1,0 +1,54 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - production
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3
+
+      - name: Install SSH key to host
+        uses: kielabokkie/ssh-key-and-known-hosts-action@v1.1.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-host: ${{ secrets.HOST_IP }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+          architecture: x64
+
+      - name: Install correct version of Docker Compose
+        run: |
+          sudo pip install docker-compose
+          sudo pip install dump-env
+
+      - name: Add environment variables
+        run: |
+          touch .env
+          echo POSTGRES_DB=${{ secrets.POSTGRES_DB }} >> .env
+          echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
+          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
+          echo POSTGRES_HOST=postgresql >> .env
+          echo POSTGRES_PORT=5432 >> .env
+          echo REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }} >> .env
+          echo PASSWORD_SALT=${{ secrets.PASSWORD_SALT }} >> .env
+          echo SIGNING_KEY=${{ secrets.SIGNING_KEY }} >> .env
+
+      - name: Cleaning up and start remote Docker Compose
+        if: success() || failure()
+        run: |
+          docker context create \
+            --docker host=ssh://${{ secrets.HOST_USERNAME }}@${{ secrets.HOST_IP }} \
+            --description="Remote engine at ${{ secrets.HOST_IP }}" \
+            remote
+          docker context use remote
+          docker-compose --context remote -f docker-compose.prod.yml down
+          docker-compose --context remote -f docker-compose.prod.yml up -d --force-recreate --build

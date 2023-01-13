@@ -9,7 +9,7 @@
 postgres-data
 
 # builds
-bin
+./app/bin
 
 # environment
 .env
