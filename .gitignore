@@ -1,6 +1,15 @@
+# ide
+.idea
+
+# os
+.DS_Store
+
+# project
 ./app/media
 postgres-data
 
 # builds
-./app/bin
+bin
 
+# environment
+.env
