@@ -17,8 +17,14 @@ type Request struct {
 
 // Output structures
 
-type PrivateRequest struct {
+type PrivateRequestWithSender struct {
 	ID       string                    `json:"id"`
 	SenderID string                    `json:"senderID"`
 	Sender   *PublicUserWithoutFriends `json:"sender"`
+}
+
+type PrivateRequestWithReceiver struct {
+	ID         string                    `json:"id"`
+	ReceiverID string                    `json:"receiverID"`
+	Receiver   *PublicUserWithoutFriends `json:"receiver"`
 }

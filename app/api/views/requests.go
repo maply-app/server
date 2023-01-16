@@ -10,9 +10,18 @@ import (
 	"net/http"
 )
 
-// GetRequests ...
-func GetRequests(c *fiber.Ctx) error {
-	requests, err := requests.GetRequests(c.Locals("user").(string))
+// GetReceivedRequests ...
+func GetReceivedRequests(c *fiber.Ctx) error {
+	requests, err := requests.GetReceivedRequests(c.Locals("user").(string))
+	if err != nil {
+		return core.Send(c, core.Error(core.InternalServerError))
+	}
+	return core.Send(c, core.Success(http.StatusOK, requests))
+}
+
+// GetSentRequests ...
+func GetSentRequests(c *fiber.Ctx) error {
+	requests, err := requests.GetSentRequests(c.Locals("user").(string))
 	if err != nil {
 		return core.Send(c, core.Error(core.InternalServerError))
 	}

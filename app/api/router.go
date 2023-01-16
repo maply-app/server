@@ -34,12 +34,13 @@ func SetupRoutes(app *fiber.App) {
 
 	// -> -> Friends
 	friends := v1.Group("/friends", middleware.UserIdentity)
-	friends.Get("/get", views.GetFriends)
+	//friends.Get("/get", views.GetFriends)
 	friends.Delete("/delete", views.DeleteFriend)
 
 	// -> -> -> Requests
 	requests := friends.Group("/requests")
-	requests.Get("/get", views.GetRequests)
+	requests.Get("/received", views.GetReceivedRequests)
+	requests.Get("/sent", views.GetSentRequests)
 	requests.Post("/send", views.SendRequest)
 	requests.Get("/confirm", views.ConfirmRequest)
 	requests.Get("/cancel", views.CancelRequest)

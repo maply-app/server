@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-// UserIdentity Auth middleware
+// UserIdentity ...
 func UserIdentity(c *fiber.Ctx) error {
 	header := string(c.Request().Header.Peek("Authorization"))
 	if header == "" {

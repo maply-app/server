@@ -12,6 +12,7 @@ import (
 // Get ...
 func Get(c *fiber.Ctx) error {
 	user, err := users.GetUser(c.Locals("user").(string))
+
 	if err != nil {
 		return core.Send(c, core.Error(core.ObjectNotFound))
 	}

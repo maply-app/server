@@ -42,6 +42,14 @@ func GetRequestsByReceiver(userID string) ([]models.Request, error) {
 	return requests, err
 }
 
+// GetRequestsBySender ...
+func GetRequestsBySender(userID string) ([]models.Request, error) {
+	var requests []models.Request
+	query := "SELECT * FROM requests WHERE sender_id = ?;"
+	err := repository.DB.Raw(query, userID).Preload("Receiver").Find(&requests).Error
+	return requests, err
+}
+
 // CreateRequest ...
 func CreateRequest(r *models.Request) (string, error) {
 	result := repository.DB.Create(&r)
