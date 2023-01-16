@@ -9,6 +9,7 @@ import (
 	"maply/api"
 	"maply/config"
 	"maply/repository"
+	"maply/ws"
 	"os"
 )
 
@@ -28,9 +29,10 @@ func main() {
 	repository.InitPostgres(cfg.Postgres)
 
 	// Initialise Fiber web server
-	app := fiber.New(fiber.Config{ServerHeader: "IDI_NAHUI", Prefork: true})
+	app := fiber.New(fiber.Config{ServerHeader: "IDI_NAHUI", Prefork: false}) // true
 	app.Use(cors.New())
 	api.SetupRoutes(app)
+	ws.SetupRoutes(app)
 	addr := fmt.Sprintf("%s:%s", cfg.HTTP.Host, cfg.HTTP.Port)
 	if err := app.Listen(addr); err != nil {
 		log.Fatalf("Failed to start web server: %s", err.Error())

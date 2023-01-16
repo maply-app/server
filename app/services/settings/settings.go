@@ -23,8 +23,8 @@ func Settings(userID string, s *models.Settings) error {
 		s.Username = u.Username
 	}
 
-	var avatar = fmt.Sprintf("/media/%s.jpg", utils.HashFileName(s.Avatar.Filename))
-	if s.Avatar.Size != 0 {
+	if s.Avatar != nil && s.Avatar.Size != 0 {
+		var avatar = fmt.Sprintf("%s.jpg", utils.HashFileName(s.Avatar.Filename))
 		fasthttp.SaveMultipartFile(s.Avatar, fmt.Sprintf("/usr/src/app/media/%s", avatar))
 		s.Avatar.Filename = avatar
 	}
