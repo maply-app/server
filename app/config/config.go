@@ -10,10 +10,17 @@ var C Config
 
 type (
 	Config struct {
+		App      AppConfig
 		Postgres PostgresConfig
 		Redis    RedisConfig
 		HTTP     HTTPConfig
 		Auth     AuthConfig
+		Stats    StatsConfig
+	}
+
+	AppConfig struct {
+		BaseDir  string
+		MediaDir string
 	}
 
 	HTTPConfig struct {
@@ -39,16 +46,22 @@ type (
 		TTL          time.Duration
 		SigningKey   string
 	}
+
+	StatsConfig struct {
+		TTL time.Duration
+	}
 )
 
-// InitConfig populates Config struct with values from config file
-// located at filepath and environment variables
 func InitConfig() *Config {
 	SetConfig(&C)
 	return &C
 }
 
 func SetConfig(cfg *Config) {
+	// App
+	cfg.App.BaseDir = viper.GetString("app.dirs.base")
+	cfg.App.MediaDir = viper.GetString("app.dirs.media")
+
 	// HTTP
 	cfg.HTTP.Host = viper.GetString("app.server.http.host")
 	cfg.HTTP.Port = viper.GetString("app.server.http.port")
@@ -68,4 +81,7 @@ func SetConfig(cfg *Config) {
 	cfg.Auth.PasswordSalt = os.Getenv("PASSWORD_SALT")
 	cfg.Auth.TTL = viper.GetDuration("app.token.ttl")
 	cfg.Auth.SigningKey = os.Getenv("SIGNING_KEY")
+
+	// Stats
+	cfg.Stats.TTL = viper.GetDuration("app.stats.ttl")
 }

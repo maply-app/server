@@ -8,13 +8,11 @@ import (
 )
 
 func RegisterSerializer(c *fiber.Ctx) (*models.User, bool) {
-	// Parse a body
 	data := &models.User{}
 	if err := c.BodyParser(data); err != nil {
 		return data, false
 	}
 
-	// Validate a model
 	var validate = validator.New()
 	if err := validate.Struct(data); err != nil {
 		return data, false
@@ -24,9 +22,6 @@ func RegisterSerializer(c *fiber.Ctx) (*models.User, bool) {
 	if !validators.Password(data.Password) {
 		return data, false
 	}
-
-	// Other...
-
 	return data, true
 }
 
@@ -36,19 +31,14 @@ type LoginInput struct {
 }
 
 func LoginSerializer(c *fiber.Ctx) (*LoginInput, bool) {
-	// Parse a body
 	data := &LoginInput{}
 	if err := c.BodyParser(data); err != nil {
 		return data, false
 	}
 
-	// Validate a model
 	var validate = validator.New()
 	if err := validate.Struct(data); err != nil {
 		return data, false
 	}
-
-	// Other...
-
 	return data, true
 }

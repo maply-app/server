@@ -3,14 +3,14 @@ package settings
 import (
 	"fmt"
 	"github.com/valyala/fasthttp"
+	"maply/config"
 	"maply/models"
 	"maply/repository/managers"
 	"maply/services/utils"
 )
 
-// Settings ...
-func Settings(userID string, s *models.Settings) error {
-	u, err := managers.GetUser(userID)
+func Settings(userId string, s *models.Settings) error {
+	u, err := managers.GetUser(userId)
 	if err != nil {
 		return err
 	}
@@ -25,7 +25,7 @@ func Settings(userID string, s *models.Settings) error {
 
 	if s.Avatar != nil && s.Avatar.Size != 0 {
 		var avatar = fmt.Sprintf("%s.jpg", utils.HashFileName(s.Avatar.Filename))
-		fasthttp.SaveMultipartFile(s.Avatar, fmt.Sprintf("/usr/src/app/media/%s", avatar))
+		fasthttp.SaveMultipartFile(s.Avatar, config.C.App.BaseDir+config.C.App.MediaDir+avatar)
 		s.Avatar.Filename = avatar
 	}
 

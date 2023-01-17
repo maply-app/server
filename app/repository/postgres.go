@@ -13,8 +13,6 @@ var DB *gorm.DB
 
 func InitPostgres(cfg config.PostgresConfig) {
 	var err error
-
-	// Connect to database
 	connectionString := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		cfg.Host,

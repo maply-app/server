@@ -8,7 +8,6 @@ import (
 	"net/http"
 )
 
-// Settings ...
 func Settings(c *fiber.Ctx) error {
 	input, status := serializers.SettingsSerializer(c)
 	if !status {

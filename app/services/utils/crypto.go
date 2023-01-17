@@ -23,7 +23,6 @@ func HashPassword(password string) string {
 	return hex.EncodeToString(hashedPasswordBytes)
 }
 
-// HashFileName ...
 func HashFileName(s string) string {
 	var fileBytes = []byte(s)
 	var now = strconv.FormatInt(time.Now().UTC().UnixNano(), 10)

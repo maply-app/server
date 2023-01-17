@@ -11,7 +11,7 @@ const (
 	ConfirmRequest = "confirmRequest"
 	CancelRequest  = "cancelRequest"
 	DeleteFriend   = "deleteFriend"
-	FriendsGeo     = "friendsGeo"
+	FriendsStats   = "friendsStats"
 )
 
 type Response struct {
@@ -26,7 +26,6 @@ func CreateEvent(eventType string, data any) Response {
 	return response
 }
 
-// NewEvent example –> ws.NewEvent(userID, ws.FriendRequest, user)
 func NewEvent(userId, eventType string, msg any) error {
 	c := GetClientConnection(userId)
 	if c == nil {

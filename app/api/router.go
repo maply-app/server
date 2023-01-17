@@ -11,33 +11,36 @@ import (
 func SetupRoutes(app *fiber.App) {
 	api := app.Group("/api", logger.New())
 
-	// -> v1
+	// v1
 	v1 := api.Group("/v1", func(c *fiber.Ctx) error {
 		c.Set("Version", "v1")
 		return c.Next()
 	})
 
-	// -> -> Auth
+	// Auth
 	auth := v1.Group("/auth")
 	auth.Post("/register", views.Register)
 	auth.Post("/login", views.Login)
 
-	// -> -> User
+	// User
 	users := v1.Group("/users", middleware.UserIdentity)
 	users.Get("/get", views.Get)
 	users.Get("/find", views.Find)
 	users.Get("/get-by-id", views.GetByID)
 
-	// -> -> Settings
+	// Settings
 	settings := users.Group("/settings")
 	settings.Post("/", views.Settings)
 
-	// -> -> Friends
+	// Settings
+	stats := users.Group("/stats")
+	stats.Post("/", views.UpdateStats)
+
+	// Friends
 	friends := v1.Group("/friends", middleware.UserIdentity)
-	//friends.Get("/get", views.GetFriends)
 	friends.Delete("/delete", views.DeleteFriend)
 
-	// -> -> -> Requests
+	// Requests
 	requests := friends.Group("/requests")
 	requests.Get("/received", views.GetReceivedRequests)
 	requests.Get("/sent", views.GetSentRequests)

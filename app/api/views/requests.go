@@ -10,7 +10,6 @@ import (
 	"net/http"
 )
 
-// GetReceivedRequests ...
 func GetReceivedRequests(c *fiber.Ctx) error {
 	requests, err := requests.GetReceivedRequests(c.Locals("user").(string))
 	if err != nil {
@@ -19,7 +18,6 @@ func GetReceivedRequests(c *fiber.Ctx) error {
 	return core.Send(c, core.Success(http.StatusOK, requests))
 }
 
-// GetSentRequests ...
 func GetSentRequests(c *fiber.Ctx) error {
 	requests, err := requests.GetSentRequests(c.Locals("user").(string))
 	if err != nil {
@@ -28,7 +26,6 @@ func GetSentRequests(c *fiber.Ctx) error {
 	return core.Send(c, core.Success(http.StatusOK, requests))
 }
 
-// SendRequest ...
 func SendRequest(c *fiber.Ctx) error {
 	input, status := serializers.SendRequestSerializer(c)
 	if !status {
@@ -46,7 +43,6 @@ func SendRequest(c *fiber.Ctx) error {
 	}
 }
 
-// ConfirmRequest ...
 func ConfirmRequest(c *fiber.Ctx) error {
 	input := c.Query("requestID", "")
 	if !validators.UUID(input) {
@@ -62,7 +58,6 @@ func ConfirmRequest(c *fiber.Ctx) error {
 	}
 }
 
-// CancelRequest ...
 func CancelRequest(c *fiber.Ctx) error {
 	input := c.Query("requestID", "")
 	if !validators.UUID(input) {

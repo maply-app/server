@@ -7,6 +7,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"maply/api"
+	"maply/cache"
 	"maply/config"
 	"maply/repository"
 	"maply/ws"
@@ -27,6 +28,9 @@ func main() {
 
 	// Initialise a PostgreSQL connection
 	repository.InitPostgres(cfg.Postgres)
+
+	// Initialise a Redis connection
+	cache.InitRedis(cfg.Redis)
 
 	// Initialise Fiber web server
 	app := fiber.New(fiber.Config{ServerHeader: "IDI_NAHUI", Prefork: false}) // true
