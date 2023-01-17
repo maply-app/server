@@ -1,12 +1,15 @@
 app:
   dirs:
     base: "/usr/src/app"
+    media: "/media/"
   server:
     http:
       host: "0.0.0.0"
       port: "8000"
   token:
     ttl: 720h
+  stats:
+    ttl: 72h
 
 postgresql:
   host: "postgresql"

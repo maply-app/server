@@ -6,14 +6,12 @@ import (
 	"maply/repository/managers"
 )
 
-// GetUser ...
 func GetUser(id string) (*models.PrivateUser, error) {
 	u, err := managers.GetUser(id)
 	if err != nil {
 		return &models.PrivateUser{}, err
 	}
 
-	// Pretty response
 	resp := &models.PrivateUser{}
 	for i := range u.Friends {
 		resp.Friends = append(resp.Friends, &models.PublicUserWithoutFriends{})
@@ -23,14 +21,12 @@ func GetUser(id string) (*models.PrivateUser, error) {
 	return resp, nil
 }
 
-// GetUserByID ...
 func GetUserByID(id string) (*models.PublicUser, error) {
 	u, err := managers.GetUser(id)
 	if err != nil {
 		return &models.PublicUser{}, err
 	}
 
-	// Pretty response
 	resp := &models.PublicUser{}
 	for i := range u.Friends {
 		resp.Friends = append(resp.Friends, &models.PublicUserWithoutFriends{})
@@ -47,7 +43,6 @@ func FindUser(username string) ([]*models.PublicUserWithoutFriends, error) {
 		return []*models.PublicUserWithoutFriends{}, err
 	}
 
-	// Pretty response
 	var resp []*models.PublicUserWithoutFriends
 	for i := range u {
 		resp = append(resp, &models.PublicUserWithoutFriends{})

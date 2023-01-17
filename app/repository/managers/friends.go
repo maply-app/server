@@ -1,40 +1,35 @@
 package managers
 
 import (
-	"maply/models"
 	"maply/repository"
 )
 
-// AddFriend ...
-func AddFriend(userID, friendID string) error {
+func AddFriend(userId, friendId string) error {
 	query := "INSERT INTO user_friends (user_id, friend_id) VALUES (?, ?), (?, ?);"
-	err := repository.DB.Exec(query, userID, friendID, friendID, userID).Error
+	err := repository.DB.Exec(query, userId, friendId, friendId, userId).Error
 	return err
 }
 
-// GetFriends ...
-func GetFriends(userID string) ([]models.User, error) {
-	var friends []models.User
-	query := "SELECT * FROM users JOIN user_friends ON user_friends.friend_id = users.id AND user_friends.user_id = ? ORDER BY users.id"
-	err := repository.DB.Raw(query, userID).Scan(&friends).Error
-	return friends, err
-}
-
-// DeleteFriend ...
-func DeleteFriend(userID, friendID string) error {
+func DeleteFriend(userId, friendId string) error {
 	query := "DELETE FROM user_friends WHERE user_id = ? AND friend_id = ? OR user_id = ? AND friend_id = ?;"
-	err := repository.DB.Exec(query, userID, friendID, friendID, userID).Error
+	err := repository.DB.Exec(query, userId, friendId, friendId, userId).Error
 	return err
 }
 
-// CheckFriendByID ...
-func CheckFriendByID(userID, friendID string) bool {
+func CheckFriendByID(userId, friendId string) bool {
 	var count int64
 	query := "SELECT count(*) FROM user_friends WHERE user_id = ? AND friend_id = ?;"
-	repository.DB.Raw(query, userID, friendID).Scan(&count)
+	repository.DB.Raw(query, userId, friendId).Scan(&count)
 	if count == 0 {
 		return false
 	} else {
 		return true
 	}
+}
+
+func GetFriendsId(userId string) ([]string, error) {
+	var friends []string
+	query := "SELECT friend_id FROM user_friends WHERE user_id = ?;"
+	err := repository.DB.Raw(query, userId).Find(&friends).Error
+	return friends, err
 }

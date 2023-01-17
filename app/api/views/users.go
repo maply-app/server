@@ -9,7 +9,6 @@ import (
 	"net/http"
 )
 
-// Get ...
 func Get(c *fiber.Ctx) error {
 	user, err := users.GetUser(c.Locals("user").(string))
 
@@ -19,7 +18,6 @@ func Get(c *fiber.Ctx) error {
 	return core.Send(c, core.Success(http.StatusOK, user))
 }
 
-// Find ...
 func Find(c *fiber.Ctx) error {
 	input, status := serializers.FindUserSerializer(c)
 	if !status {
@@ -33,9 +31,8 @@ func Find(c *fiber.Ctx) error {
 	return core.Send(c, core.Success(http.StatusOK, users))
 }
 
-// GetByID ...
 func GetByID(c *fiber.Ctx) error {
-	input := c.Query("userID", "")
+	input := c.Query("userId", "")
 	if !validators.UUID(input) {
 		return core.Send(c, core.Error(core.ValidationError))
 	}

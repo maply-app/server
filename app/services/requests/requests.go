@@ -10,7 +10,6 @@ import (
 	"maply/ws"
 )
 
-// SendRequest ...
 func SendRequest(r *models.Request) (string, error) {
 	f := managers.CheckFriendByID(r.SenderID, r.ReceiverID)
 	if f {
@@ -29,7 +28,6 @@ func SendRequest(r *models.Request) (string, error) {
 		return "", err
 	}
 
-	// Pretty response
 	resp := &models.PrivateRequestWithSender{}
 	resp.Sender = &models.PublicUserWithoutFriends{}
 	u, _ := managers.GetUser(r.SenderID)
@@ -38,18 +36,15 @@ func SendRequest(r *models.Request) (string, error) {
 
 	// Send socket event
 	ws.NewEvent(r.ReceiverID, ws.SendRequest, resp)
-
 	return requestID, err
 }
 
-// GetReceivedRequests ...
-func GetReceivedRequests(userID string) ([]*models.PrivateRequestWithSender, error) {
-	r, err := managers.GetRequestsByReceiver(userID)
+func GetReceivedRequests(userId string) ([]*models.PrivateRequestWithSender, error) {
+	r, err := managers.GetRequestsByReceiver(userId)
 	if err != nil {
 		return []*models.PrivateRequestWithSender{}, err
 	}
 
-	// Pretty response
 	var resp []*models.PrivateRequestWithSender
 	for i := range r {
 		resp = append(resp, &models.PrivateRequestWithSender{})
@@ -62,14 +57,12 @@ func GetReceivedRequests(userID string) ([]*models.PrivateRequestWithSender, err
 	return resp, nil
 }
 
-// GetSentRequests ...
-func GetSentRequests(userID string) ([]*models.PrivateRequestWithReceiver, error) {
-	r, err := managers.GetRequestsBySender(userID)
+func GetSentRequests(userId string) ([]*models.PrivateRequestWithReceiver, error) {
+	r, err := managers.GetRequestsBySender(userId)
 	if err != nil {
 		return []*models.PrivateRequestWithReceiver{}, err
 	}
 
-	// Pretty response
 	var resp []*models.PrivateRequestWithReceiver
 	for i := range r {
 		resp = append(resp, &models.PrivateRequestWithReceiver{})
@@ -82,14 +75,13 @@ func GetSentRequests(userID string) ([]*models.PrivateRequestWithReceiver, error
 	return resp, nil
 }
 
-// ConfirmRequest ...
-func ConfirmRequest(userID, requestID string) error {
+func ConfirmRequest(userId, requestID string) error {
 	r, err := managers.GetRequestByID(requestID)
 	if err != nil {
 		return err
 	}
 
-	if userID != r.ReceiverID {
+	if userId != r.ReceiverID {
 		return errors.Forbidden
 	}
 
@@ -103,7 +95,6 @@ func ConfirmRequest(userID, requestID string) error {
 		return err
 	}
 
-	// Pretty response
 	resp := &models.PrivateRequestWithReceiver{}
 	resp.Receiver = &models.PublicUserWithoutFriends{}
 	u, _ := managers.GetUser(r.ReceiverID)
@@ -112,24 +103,21 @@ func ConfirmRequest(userID, requestID string) error {
 
 	// Send socket event
 	ws.NewEvent(r.SenderID, ws.ConfirmRequest, resp)
-
 	return nil
 }
 
-// CancelRequest ...
-func CancelRequest(userID, requestID string) error {
+func CancelRequest(userId, requestID string) error {
 	r, err := managers.GetRequestByID(requestID)
 	if err != nil {
 		return err
 	}
 
-	if err := managers.DeleteRequest(userID, requestID); err != nil {
+	if err := managers.DeleteRequest(userId, requestID); err != nil {
 		return err
 	}
 
-	// Send socket event
+	// Send socket events
 	ws.NewEvent(r.ReceiverID, ws.CancelRequest, fiber.Map{"id": requestID})
 	ws.NewEvent(r.SenderID, ws.CancelRequest, fiber.Map{"id": requestID})
-
 	return nil
 }
