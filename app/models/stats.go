@@ -1,14 +1,14 @@
 package models
 
-type Cords struct {
+type Coords struct {
 	Lat float32 `json:"lat" validate:"min=-90,max=90"`
 	Lon float32 `json:"lon" validate:"min=-180,max=180"`
 }
 
 type Geo struct {
-	Cords     Cords `json:"cords" validate:"required"`
-	Speed     int   `json:"speed" validate:"min=-1"`
-	Direction int   `json:"direction" validate:"min=-360,max=360"`
+	Coords    Coords `json:"coords" validate:"required"`
+	Speed     int    `json:"speed" validate:"min=-1"`
+	Direction int    `json:"direction" validate:"min=-360,max=360"`
 }
 
 type Info struct {
