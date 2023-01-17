@@ -21,14 +21,14 @@ func baseHandler(c *websocket.Conn) {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				fmt.Println("read error:", err)
 			}
-			return
+			break
 		}
 
 		if messageType == websocket.TextMessage {
 			// Broadcast the received message
 			broadcast <- string(message)
 		} else {
-			fmt.Println("websocket message received of type", messageType)
+			//fmt.Println("websocket message received of type", messageType)
 		}
 	}
 }
