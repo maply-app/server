@@ -6,9 +6,10 @@ type Coords struct {
 }
 
 type Geo struct {
-	Coords    Coords `json:"coords" validate:"required"`
-	Speed     int    `json:"speed" validate:"min=-1"`
-	Direction int    `json:"direction" validate:"min=-360,max=360"`
+	Coords      Coords `json:"coords" validate:"required"`
+	Speed       int    `json:"speed" validate:"min=-1"`
+	Direction   int    `json:"direction" validate:"min=-360,max=360"`
+	timeOnPlace int    `json:"timeOnPlace" validate:"omitempty"`
 }
 
 type Info struct {

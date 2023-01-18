@@ -19,7 +19,6 @@ func InitRedis(cfg config.RedisConfig) {
 		DB:   0,
 	})
 
-	// Test ping
 	_, err := Redis.Ping().Result()
 	if err != nil {
 		log.Fatalf("Failed to initialize Redis: %s", err.Error())
