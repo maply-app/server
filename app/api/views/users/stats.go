@@ -1,4 +1,4 @@
-package views
+package users
 
 import (
 	"github.com/gofiber/fiber/v2"
@@ -19,7 +19,7 @@ func UpdateStats(c *fiber.Ctx) error {
 	if err != nil {
 		return core.Send(c, core.Error(core.InternalServerError))
 	}
-	
+
 	stats.GetStats(userId)
 	return core.Send(c, core.Success(http.StatusOK, nil))
 }
