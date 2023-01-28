@@ -6,9 +6,13 @@ import (
 	"maply/models"
 	"maply/repository/managers"
 	"maply/ws"
+	"time"
 )
 
 func UpdateStats(userId string, s *models.Stats) error {
+	var now = time.Now().Unix()
+	s.LastUpdate = int(now)
+
 	b, err := json.Marshal(s)
 	if err != nil {
 		return err
@@ -29,7 +33,10 @@ func GetStats(userId string) {
 		m := &models.Stats{}
 
 		if s[i] != nil {
-			json.Unmarshal([]byte(s[i].(string)), m)
+			err := json.Unmarshal([]byte(s[i].(string)), m)
+			if err != nil {
+				return
+			}
 
 			// Update online status
 			if ws.GetClientConnection(friendsId) != nil {

@@ -13,7 +13,7 @@ func RegisterSerializer(c *fiber.Ctx) (*models.User, bool) {
 		return data, false
 	}
 
-	var validate = validator.New()
+	validate := validator.New()
 	if err := validate.Struct(data); err != nil {
 		return data, false
 	}
@@ -36,7 +36,7 @@ func LoginSerializer(c *fiber.Ctx) (*LoginInput, bool) {
 		return data, false
 	}
 
-	var validate = validator.New()
+	validate := validator.New()
 	if err := validate.Struct(data); err != nil {
 		return data, false
 	}

@@ -5,6 +5,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"maply/config"
 	"maply/models"
 )
@@ -24,14 +25,23 @@ func InitPostgres(cfg config.PostgresConfig) {
 	//DB, err = gorm.Open(postgres.Open(connectionString), &gorm.Config{
 	//	Logger: logger.Default.LogMode(logger.Info),
 	//})
-	DB, err = gorm.Open(postgres.Open(connectionString))
+	DB, err = gorm.Open(postgres.Open(connectionString), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 	if err != nil {
 		log.Fatalf("Failed to initialize PostgreSQL: %s", err.Error())
 	}
 	log.Info("Connection opened to PostgreSQL")
 
 	// Make auto migrations
-	DB.AutoMigrate(&models.User{})
-	DB.AutoMigrate(&models.Request{})
+	if err = DB.AutoMigrate(&models.User{}); err != nil {
+		return
+	}
+	if err = DB.AutoMigrate(&models.Request{}); err != nil {
+		return
+	}
+	if err = DB.AutoMigrate(&models.Message{}); err != nil {
+		return
+	}
 	log.Info("PostgreSQL migrated")
 }

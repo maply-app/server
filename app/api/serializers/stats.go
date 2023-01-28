@@ -12,7 +12,7 @@ func StatsSerializer(c *fiber.Ctx) (*models.Stats, bool) {
 		return data, false
 	}
 
-	var validate = validator.New()
+	validate := validator.New()
 	if err := validate.Struct(data); err != nil {
 		return data, false
 	}

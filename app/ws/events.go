@@ -12,6 +12,7 @@ const (
 	CancelRequest  = "cancelRequest"
 	DeleteFriend   = "deleteFriend"
 	FriendsStats   = "friendsStats"
+	NewMessage     = "newMessage"
 )
 
 type Response struct {

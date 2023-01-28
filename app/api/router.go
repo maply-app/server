@@ -4,7 +4,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"maply/api/middleware"
-	"maply/api/views"
+	authViews "maply/api/views/auth"
+	chatViews "maply/api/views/chat"
+	friendsViews "maply/api/views/friends"
+	usersViews "maply/api/views/users"
 )
 
 // SetupRoutes setup router api
@@ -19,32 +22,41 @@ func SetupRoutes(app *fiber.App) {
 
 	// Auth
 	auth := v1.Group("/auth")
-	auth.Post("/register", views.Register)
-	auth.Post("/login", views.Login)
+	auth.Post("/register", authViews.Register)
+	auth.Post("/login", authViews.Login)
 
 	// User
 	users := v1.Group("/users", middleware.UserIdentity)
-	users.Get("/get", views.Get)
-	users.Get("/find", views.Find)
-	users.Get("/get-by-id", views.GetByID)
+	users.Get("/get", usersViews.Get)
+	users.Get("/find", usersViews.Find)
+	users.Get("/get-by-id", usersViews.GetByID)
 
 	// Settings
 	settings := users.Group("/settings")
-	settings.Post("/", views.Settings)
+	settings.Post("/", usersViews.Settings)
 
 	// Settings
 	stats := users.Group("/stats")
-	stats.Post("/", views.UpdateStats)
+	stats.Post("/", usersViews.UpdateStats)
 
 	// Friends
 	friends := v1.Group("/friends", middleware.UserIdentity)
-	friends.Delete("/delete", views.DeleteFriend)
+	friends.Delete("/delete", friendsViews.DeleteFriend)
 
 	// Requests
 	requests := friends.Group("/requests")
-	requests.Get("/received", views.GetReceivedRequests)
-	requests.Get("/sent", views.GetSentRequests)
-	requests.Post("/send", views.SendRequest)
-	requests.Get("/confirm", views.ConfirmRequest)
-	requests.Get("/cancel", views.CancelRequest)
+	requests.Get("/received", friendsViews.GetReceivedRequests)
+	requests.Get("/sent", friendsViews.GetSentRequests)
+	requests.Post("/send", friendsViews.SendRequest)
+	requests.Get("/confirm", friendsViews.ConfirmRequest)
+	requests.Get("/cancel", friendsViews.CancelRequest)
+
+	// Chat
+	chats := v1.Group("/chats", middleware.UserIdentity)
+	chats.Get("/get", chatViews.GetChats)
+
+	// –> Messages
+	messages := chats.Group("/messages", middleware.UserIdentity)
+	messages.Post("/send", chatViews.Send)
+	messages.Get("/get", chatViews.GetMessages)
 }

@@ -5,11 +5,11 @@
 .DS_Store
 
 # project
-./app/media
+*/media
 postgres-data
 
 # builds
-./app/bin
+*/bin
 
 # environment
 .env
