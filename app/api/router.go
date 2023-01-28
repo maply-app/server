@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"maply/api/middleware"
 	authViews "maply/api/views/auth"
+	chatViews "maply/api/views/chat"
 	friendsViews "maply/api/views/friends"
 	usersViews "maply/api/views/users"
 )
@@ -49,4 +50,13 @@ func SetupRoutes(app *fiber.App) {
 	requests.Post("/send", friendsViews.SendRequest)
 	requests.Get("/confirm", friendsViews.ConfirmRequest)
 	requests.Get("/cancel", friendsViews.CancelRequest)
+
+	// Chat
+	chats := v1.Group("/chats", middleware.UserIdentity)
+	chats.Get("/get", chatViews.GetChats)
+
+	// –> Messages
+	messages := chats.Group("/messages", middleware.UserIdentity)
+	messages.Post("/send", chatViews.Send)
+	messages.Get("/get", chatViews.GetMessages)
 }

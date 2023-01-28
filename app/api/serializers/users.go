@@ -14,7 +14,7 @@ func FindUserSerializer(c *fiber.Ctx) (*FindUserInput, bool) {
 	data := &FindUserInput{
 		username,
 	}
-	var validate = validator.New()
+	validate := validator.New()
 	if err := validate.Struct(data); err != nil {
 		return data, false
 	}

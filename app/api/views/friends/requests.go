@@ -11,19 +11,19 @@ import (
 )
 
 func GetReceivedRequests(c *fiber.Ctx) error {
-	requests, err := requests.GetReceivedRequests(c.Locals("user").(string))
+	r, err := requests.GetReceivedRequests(c.Locals("user").(string))
 	if err != nil {
 		return core.Send(c, core.Error(core.InternalServerError))
 	}
-	return core.Send(c, core.Success(http.StatusOK, requests))
+	return core.Send(c, core.Success(http.StatusOK, r))
 }
 
 func GetSentRequests(c *fiber.Ctx) error {
-	requests, err := requests.GetSentRequests(c.Locals("user").(string))
+	r, err := requests.GetSentRequests(c.Locals("user").(string))
 	if err != nil {
 		return core.Send(c, core.Error(core.InternalServerError))
 	}
-	return core.Send(c, core.Success(http.StatusOK, requests))
+	return core.Send(c, core.Success(http.StatusOK, r))
 }
 
 func SendRequest(c *fiber.Ctx) error {

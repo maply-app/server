@@ -19,7 +19,7 @@ func SettingsSerializer(c *fiber.Ctx) (*models.Settings, bool) {
 		data.Avatar = avatar
 	}
 
-	var validate = validator.New()
+	validate := validator.New()
 	if err := validate.Struct(data); err != nil {
 		return data, false
 	}

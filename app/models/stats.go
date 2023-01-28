@@ -9,7 +9,7 @@ type Geo struct {
 	Coords      Coords `json:"coords" validate:"required"`
 	Speed       int    `json:"speed" validate:"min=-1"`
 	Direction   int    `json:"direction" validate:"min=-360,max=360"`
-	timeOnPlace int    `json:"timeOnPlace" validate:"omitempty"`
+	TimeOnPlace int    `json:"timeOnPlace" validate:"omitempty"`
 }
 
 type Info struct {
@@ -17,7 +17,8 @@ type Info struct {
 }
 
 type Stats struct {
-	Geo      Geo  `json:"geo" validate:"required"`
-	Info     Info `json:"info" validate:"required"`
-	IsOnline bool `json:"isOnline" validate:"omitempty"`
+	Geo        Geo  `json:"geo" validate:"required"`
+	Info       Info `json:"info" validate:"required"`
+	IsOnline   bool `json:"isOnline" validate:"omitempty"`
+	LastUpdate int  `json:"lastUpdate" validate:"omitempty"`
 }
