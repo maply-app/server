@@ -38,5 +38,6 @@ type Chat struct {
 	ReceiverID string                    `json:"receiverID"`
 	Text       string                    `json:"text"`
 	Sender     *PublicUserWithoutFriends `json:"sender"`
+	Receiver   *PublicUserWithoutFriends `json:"receiver"`
 	CreatedAt  time.Time                 `json:"createdAt"`
 }

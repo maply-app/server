@@ -62,16 +62,13 @@ func GetChats(userId string, count, offset int) ([]*models.Chat, error) {
 			CreatedAt:  r[i].CreatedAt,
 		})
 
-		var s models.User
-		if r[i].SenderID == userId {
-			s = r[i].Receiver
-		} else {
-			s = r[i].Sender
-		}
-
 		sender := &models.PublicUserWithoutFriends{}
-		deepcopier.Copy(sender).From(s)
+		deepcopier.Copy(sender).From(r[i].Sender)
 		resp[i].Sender = sender
+
+		receiver := &models.PublicUserWithoutFriends{}
+		deepcopier.Copy(receiver).From(r[i].Receiver)
+		resp[i].Receiver = receiver
 	}
 	return resp, nil
 }
