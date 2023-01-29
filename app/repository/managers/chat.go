@@ -11,8 +11,19 @@ func CreateMessage(r *models.Message) error {
 
 func GetMessages(userId, receiverID string, count, offset int) ([]models.Message, error) {
 	var messages []models.Message
-	query := "SELECT * FROM messages WHERE sender_id = ? AND receiver_id = ? OFFSET ? LIMIT ?;"
-	err := repository.DB.Raw(query, userId, receiverID, offset, count).Preload("Sender").Find(&messages).Error
+	query := `SELECT * FROM messages WHERE
+                           sender_id = ? AND receiver_id = ? OR
+                           sender_id = ? AND receiver_id = ?
+                       ORDER BY created_at DESC OFFSET ? LIMIT ?;`
+	err := repository.DB.Raw(
+		query,
+		userId,
+		receiverID,
+		receiverID,
+		userId,
+		offset,
+		count,
+	).Preload("Sender").Find(&messages).Error
 	return messages, err
 }
 
