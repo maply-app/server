@@ -35,10 +35,11 @@ type MessageWithoutSender struct {
 }
 
 type Chat struct {
-	SenderID   string                    `json:"senderID"`
-	ReceiverID string                    `json:"receiverID"`
-	Text       string                    `json:"text"`
-	Sender     *PublicUserWithoutFriends `json:"sender"`
-	Receiver   *PublicUserWithoutFriends `json:"receiver"`
-	CreatedAt  time.Time                 `json:"createdAt"`
+	SenderID       string                    `json:"senderID"`
+	ReceiverID     string                    `json:"receiverID"`
+	Text           string                    `json:"text"`
+	Sender         *PublicUserWithoutFriends `json:"sender"`
+	Receiver       *PublicUserWithoutFriends `json:"receiver"`
+	UnreadMessages int                       `json:"unreadMessages"`
+	CreatedAt      time.Time                 `json:"createdAt"`
 }

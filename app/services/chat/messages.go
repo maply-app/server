@@ -1,6 +1,7 @@
 package chat
 
 import (
+	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/ulule/deepcopier"
 	"maply/errors"
@@ -34,6 +35,15 @@ func SendMessage(r *models.Message) error {
 }
 
 func GetMessages(userId, receiverId string, count, offset int) ([]*models.MessageWithoutSender, error) {
+	if offset == 0 {
+		if err := managers.ReadMessages(receiverId, userId); err != nil {
+			return []*models.MessageWithoutSender{}, err
+		}
+
+		// Send socket event
+		ws.NewEvent(receiverId, ws.Readessages, fiber.Map{"userId": userId})
+	}
+
 	r, err := managers.GetMessages(userId, receiverId, count, offset)
 	if err != nil {
 		return []*models.MessageWithoutSender{}, err

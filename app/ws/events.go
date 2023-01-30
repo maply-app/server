@@ -7,12 +7,20 @@ import (
 )
 
 const (
+	// Friend requests
 	SendRequest    = "sendRequest"
 	ConfirmRequest = "confirmRequest"
 	CancelRequest  = "cancelRequest"
-	DeleteFriend   = "deleteFriend"
-	FriendsStats   = "friendsStats"
-	NewMessage     = "newMessage"
+
+	// Friends
+	DeleteFriend = "deleteFriend"
+
+	// Stats
+	FriendsStats = "friendsStats"
+
+	// Chat
+	NewMessage  = "newMessage"
+	Readessages = "readMessages"
 )
 
 type Response struct {

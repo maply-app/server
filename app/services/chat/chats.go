@@ -14,11 +14,21 @@ func GetChats(userId string, count, offset int) ([]*models.Chat, error) {
 
 	var resp []*models.Chat
 	for i := range r {
+		var unRead = 0
+		if r[i].SenderID != userId {
+			u, err := managers.GetUnreadMessages(r[i].SenderID, r[i].ReceiverID)
+			if err != nil {
+				return []*models.Chat{}, err
+			}
+			unRead = u
+		}
+
 		resp = append(resp, &models.Chat{
-			SenderID:   r[i].SenderID,
-			ReceiverID: r[i].ReceiverID,
-			Text:       r[i].Text,
-			CreatedAt:  r[i].CreatedAt,
+			SenderID:       r[i].SenderID,
+			ReceiverID:     r[i].ReceiverID,
+			Text:           r[i].Text,
+			UnreadMessages: unRead,
+			CreatedAt:      r[i].CreatedAt,
 		})
 
 		sender := &models.PublicUserWithoutFriends{}
