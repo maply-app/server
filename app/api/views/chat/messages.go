@@ -6,6 +6,7 @@ import (
 	chatSerializers "maply/api/serializers/chat"
 	"maply/errors"
 	"maply/services/chat"
+	"maply/services/validators"
 	"net/http"
 )
 
@@ -41,4 +42,19 @@ func GetMessages(c *fiber.Ctx) error {
 		return core.Send(c, core.Error(core.InternalServerError))
 	}
 	return core.Send(c, core.Success(http.StatusOK, m))
+}
+
+func ReadMessages(c *fiber.Ctx) error {
+	input := c.Query("senderID", "")
+	if !validators.UUID(input) {
+		return core.Send(c, core.Error(core.ValidationError))
+	}
+
+	if err := chat.ReadMessages(
+		c.Locals("user").(string),
+		input,
+	); err != nil {
+		return core.Send(c, core.Error(core.InternalServerError))
+	}
+	return core.Send(c, core.Success(http.StatusOK, nil))
 }

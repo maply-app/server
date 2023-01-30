@@ -56,3 +56,12 @@ func GetMessages(userId, receiverId string, count, offset int) ([]*models.Messag
 	}
 	return resp, nil
 }
+
+func ReadMessages(userId, senderId string) error {
+	if err := managers.ReadMessages(senderId, userId); err != nil {
+		return err
+	}
+
+	// Send socket event
+	return ws.NewEvent(senderId, ws.Readessages, fiber.Map{"userId": userId})
+}
