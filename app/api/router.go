@@ -59,4 +59,5 @@ func SetupRoutes(app *fiber.App) {
 	messages := chats.Group("/messages", middleware.UserIdentity)
 	messages.Post("/send", chatViews.Send)
 	messages.Get("/get", chatViews.GetMessages)
+	messages.Get("/read", chatViews.ReadMessages)
 }

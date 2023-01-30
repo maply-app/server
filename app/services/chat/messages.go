@@ -1,6 +1,7 @@
 package chat
 
 import (
+	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/ulule/deepcopier"
 	"maply/errors"
@@ -33,8 +34,17 @@ func SendMessage(r *models.Message) error {
 	return nil
 }
 
-func GetMessages(userId, receiverID string, count, offset int) ([]*models.MessageWithoutSender, error) {
-	r, err := managers.GetMessages(userId, receiverID, count, offset)
+func GetMessages(userId, receiverId string, count, offset int) ([]*models.MessageWithoutSender, error) {
+	if offset == 0 {
+		if err := managers.ReadMessages(receiverId, userId); err != nil {
+			return []*models.MessageWithoutSender{}, err
+		}
+
+		// Send socket event
+		ws.NewEvent(receiverId, ws.Readessages, fiber.Map{"userId": userId})
+	}
+
+	r, err := managers.GetMessages(userId, receiverId, count, offset)
 	if err != nil {
 		return []*models.MessageWithoutSender{}, err
 	}
@@ -47,28 +57,11 @@ func GetMessages(userId, receiverID string, count, offset int) ([]*models.Messag
 	return resp, nil
 }
 
-func GetChats(userId string, count, offset int) ([]*models.Chat, error) {
-	r, err := managers.GetChats(userId, count, offset)
-	if err != nil {
-		return []*models.Chat{}, err
+func ReadMessages(userId, senderId string) error {
+	if err := managers.ReadMessages(senderId, userId); err != nil {
+		return err
 	}
 
-	var resp []*models.Chat
-	for i := range r {
-		resp = append(resp, &models.Chat{
-			SenderID:   r[i].SenderID,
-			ReceiverID: r[i].ReceiverID,
-			Text:       r[i].Text,
-			CreatedAt:  r[i].CreatedAt,
-		})
-
-		sender := &models.PublicUserWithoutFriends{}
-		deepcopier.Copy(sender).From(r[i].Sender)
-		resp[i].Sender = sender
-
-		receiver := &models.PublicUserWithoutFriends{}
-		deepcopier.Copy(receiver).From(r[i].Receiver)
-		resp[i].Receiver = receiver
-	}
-	return resp, nil
+	// Send socket event
+	return ws.NewEvent(senderId, ws.Readessages, fiber.Map{"userId": userId})
 }

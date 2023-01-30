@@ -13,6 +13,7 @@ type Message struct {
 	ReceiverID string    `gorm:"uniqueIndex:request_index" json:"receiverID" validate:"required,min=2,max=64"`
 	Receiver   User      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"receiver" validate:"omitempty"`
 	Text       string    `gorm:"not null;size:512;" json:"text" validate:"required,min=1,max=512"`
+	IsRead     bool      `gorm:"default:false" json:"isRead" validate:"omitempty"`
 	CreatedAt  time.Time `gorm:"autoCreateTime:false" json:"createdAt"`
 }
 
@@ -34,10 +35,11 @@ type MessageWithoutSender struct {
 }
 
 type Chat struct {
-	SenderID   string                    `json:"senderID"`
-	ReceiverID string                    `json:"receiverID"`
-	Text       string                    `json:"text"`
-	Sender     *PublicUserWithoutFriends `json:"sender"`
-	Receiver   *PublicUserWithoutFriends `json:"receiver"`
-	CreatedAt  time.Time                 `json:"createdAt"`
+	SenderID       string                    `json:"senderID"`
+	ReceiverID     string                    `json:"receiverID"`
+	Text           string                    `json:"text"`
+	Sender         *PublicUserWithoutFriends `json:"sender"`
+	Receiver       *PublicUserWithoutFriends `json:"receiver"`
+	UnreadMessages int                       `json:"unreadMessages"`
+	CreatedAt      time.Time                 `json:"createdAt"`
 }

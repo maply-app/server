@@ -2,7 +2,7 @@ package stats
 
 import (
 	"encoding/json"
-	"maply/cache/manager/stats"
+	"maply/cache/managers/stats"
 	"maply/models"
 	"maply/repository/managers"
 	"maply/ws"

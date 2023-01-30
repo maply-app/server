@@ -1,23 +1,22 @@
 package chat
 
 import (
-	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"maply/api/core"
-	"maply/api/serializers"
+	chatSerializers "maply/api/serializers/chat"
 	"maply/errors"
 	"maply/services/chat"
+	"maply/services/validators"
 	"net/http"
 )
 
 func Send(c *fiber.Ctx) error {
-	input, status := serializers.SendMessageSerializer(c)
+	input, status := chatSerializers.SendMessageSerializer(c)
 	if !status {
 		return core.Send(c, core.Error(core.ValidationError))
 	}
 
 	err := chat.SendMessage(input)
-	fmt.Printf("err –> %s", err)
 	switch err {
 	case errors.ObjectDoesNotExists:
 		return core.Send(c, core.Error(core.ObjectNotFound))
@@ -29,7 +28,7 @@ func Send(c *fiber.Ctx) error {
 }
 
 func GetMessages(c *fiber.Ctx) error {
-	input, status := serializers.GetMessagesSerializer(c)
+	input, status := chatSerializers.GetMessagesSerializer(c)
 	if !status {
 		return core.Send(c, core.Error(core.ValidationError))
 	}
@@ -45,18 +44,17 @@ func GetMessages(c *fiber.Ctx) error {
 	return core.Send(c, core.Success(http.StatusOK, m))
 }
 
-func GetChats(c *fiber.Ctx) error {
-	input, status := serializers.GetChatsSerializer(c)
-	if !status {
+func ReadMessages(c *fiber.Ctx) error {
+	input := c.Query("senderID", "")
+	if !validators.UUID(input) {
 		return core.Send(c, core.Error(core.ValidationError))
 	}
-	m, err := chat.GetChats(
+
+	if err := chat.ReadMessages(
 		c.Locals("user").(string),
-		input.Count,
-		input.Offset,
-	)
-	if err != nil {
+		input,
+	); err != nil {
 		return core.Send(c, core.Error(core.InternalServerError))
 	}
-	return core.Send(c, core.Success(http.StatusOK, m))
+	return core.Send(c, core.Success(http.StatusOK, nil))
 }
