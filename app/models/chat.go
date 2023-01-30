@@ -24,6 +24,7 @@ type MessageWithSender struct {
 	SenderID  string                    `json:"senderID"`
 	Sender    *PublicUserWithoutFriends `json:"sender"`
 	Text      string                    `json:"text"`
+	IsRead    bool                      `json:"isRead"`
 	CreatedAt time.Time                 `json:"createdAt"`
 }
 
@@ -31,6 +32,7 @@ type MessageWithoutSender struct {
 	ID        string    `json:"id"`
 	SenderID  string    `json:"senderID"`
 	Text      string    `json:"text"`
+	IsRead    bool      `json:"isRead"`
 	CreatedAt time.Time `json:"createdAt"`
 }
 
