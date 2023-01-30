@@ -3,15 +3,15 @@ package friends
 import (
 	"github.com/gofiber/fiber/v2"
 	"maply/api/core"
-	"maply/api/serializers"
+	friendsSerializers "maply/api/serializers/friends"
 	"maply/errors"
-	"maply/services/requests"
+	"maply/services/friends"
 	"maply/services/validators"
 	"net/http"
 )
 
 func GetReceivedRequests(c *fiber.Ctx) error {
-	r, err := requests.GetReceivedRequests(c.Locals("user").(string))
+	r, err := friends.GetReceivedRequests(c.Locals("user").(string))
 	if err != nil {
 		return core.Send(c, core.Error(core.InternalServerError))
 	}
@@ -19,7 +19,7 @@ func GetReceivedRequests(c *fiber.Ctx) error {
 }
 
 func GetSentRequests(c *fiber.Ctx) error {
-	r, err := requests.GetSentRequests(c.Locals("user").(string))
+	r, err := friends.GetSentRequests(c.Locals("user").(string))
 	if err != nil {
 		return core.Send(c, core.Error(core.InternalServerError))
 	}
@@ -27,12 +27,12 @@ func GetSentRequests(c *fiber.Ctx) error {
 }
 
 func SendRequest(c *fiber.Ctx) error {
-	input, status := serializers.SendRequestSerializer(c)
+	input, status := friendsSerializers.SendRequestSerializer(c)
 	if !status {
 		return core.Send(c, core.Error(core.ValidationError))
 	}
 
-	id, err := requests.SendRequest(input)
+	id, err := friends.SendRequest(input)
 	switch err {
 	case errors.ObjectAlreadyExists:
 		return core.Send(c, core.Error(core.ObjectAlreadyExists))
@@ -49,7 +49,7 @@ func ConfirmRequest(c *fiber.Ctx) error {
 		return core.Send(c, core.Error(core.ValidationError))
 	}
 
-	err := requests.ConfirmRequest(c.Locals("user").(string), input)
+	err := friends.ConfirmRequest(c.Locals("user").(string), input)
 	switch err {
 	case nil:
 		return core.Send(c, core.Success(http.StatusOK, nil))
@@ -64,7 +64,7 @@ func CancelRequest(c *fiber.Ctx) error {
 		return core.Send(c, core.Error(core.ValidationError))
 	}
 
-	err := requests.CancelRequest(c.Locals("user").(string), input)
+	err := friends.CancelRequest(c.Locals("user").(string), input)
 	switch err {
 	case nil:
 		return core.Send(c, core.Success(http.StatusOK, nil))

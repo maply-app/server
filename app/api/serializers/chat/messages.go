@@ -1,4 +1,4 @@
-package serializers
+package chat
 
 import (
 	"fmt"
@@ -39,35 +39,6 @@ func GetMessagesSerializer(c *fiber.Ctx) (GetMessagesInput, bool) {
 	}
 	data := GetMessagesInput{
 		receiverId,
-		count,
-		offset,
-	}
-
-	validate := validator.New()
-	if err = validate.Struct(data); err != nil {
-		for _, e := range err.(validator.ValidationErrors) {
-			fmt.Println(e)
-		}
-		return data, false
-	}
-	return data, true
-}
-
-type GetChatsInput struct {
-	Count  int `validate:"min=0,max=25"`
-	Offset int `validate:"min=0"`
-}
-
-func GetChatsSerializer(c *fiber.Ctx) (GetChatsInput, bool) {
-	count, err := strconv.Atoi(c.Query("count", "25"))
-	if err != nil {
-		return GetChatsInput{}, false
-	}
-	offset, err := strconv.Atoi(c.Query("offset", "0"))
-	if err != nil {
-		return GetChatsInput{}, false
-	}
-	data := GetChatsInput{
 		count,
 		offset,
 	}

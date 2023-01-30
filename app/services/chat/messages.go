@@ -33,8 +33,8 @@ func SendMessage(r *models.Message) error {
 	return nil
 }
 
-func GetMessages(userId, receiverID string, count, offset int) ([]*models.MessageWithoutSender, error) {
-	r, err := managers.GetMessages(userId, receiverID, count, offset)
+func GetMessages(userId, receiverId string, count, offset int) ([]*models.MessageWithoutSender, error) {
+	r, err := managers.GetMessages(userId, receiverId, count, offset)
 	if err != nil {
 		return []*models.MessageWithoutSender{}, err
 	}
@@ -43,32 +43,6 @@ func GetMessages(userId, receiverID string, count, offset int) ([]*models.Messag
 	for i := range r {
 		resp = append(resp, &models.MessageWithoutSender{})
 		deepcopier.Copy(resp[i]).From(r[i])
-	}
-	return resp, nil
-}
-
-func GetChats(userId string, count, offset int) ([]*models.Chat, error) {
-	r, err := managers.GetChats(userId, count, offset)
-	if err != nil {
-		return []*models.Chat{}, err
-	}
-
-	var resp []*models.Chat
-	for i := range r {
-		resp = append(resp, &models.Chat{
-			SenderID:   r[i].SenderID,
-			ReceiverID: r[i].ReceiverID,
-			Text:       r[i].Text,
-			CreatedAt:  r[i].CreatedAt,
-		})
-
-		sender := &models.PublicUserWithoutFriends{}
-		deepcopier.Copy(sender).From(r[i].Sender)
-		resp[i].Sender = sender
-
-		receiver := &models.PublicUserWithoutFriends{}
-		deepcopier.Copy(receiver).From(r[i].Receiver)
-		resp[i].Receiver = receiver
 	}
 	return resp, nil
 }

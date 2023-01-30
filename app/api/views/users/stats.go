@@ -3,13 +3,13 @@ package users
 import (
 	"github.com/gofiber/fiber/v2"
 	"maply/api/core"
-	"maply/api/serializers"
+	usersSerializers "maply/api/serializers/users"
 	"maply/services/stats"
 	"net/http"
 )
 
 func UpdateStats(c *fiber.Ctx) error {
-	input, status := serializers.StatsSerializer(c)
+	input, status := usersSerializers.StatsSerializer(c)
 	if !status {
 		return core.Send(c, core.Error(core.ValidationError))
 	}
