@@ -3,8 +3,8 @@ package friends
 import (
 	"github.com/gofiber/fiber/v2"
 	"maply/api/core"
+	"maply/core/validators"
 	"maply/services/friends"
-	"maply/services/validators"
 	"net/http"
 )
 

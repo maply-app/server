@@ -3,11 +3,11 @@ package users
 import (
 	"github.com/ulule/deepcopier"
 	"maply/models"
-	"maply/repository/managers"
+	"maply/repository/managers/users"
 )
 
 func GetUser(id string) (*models.PrivateUser, error) {
-	u, err := managers.GetUser(id)
+	u, err := users.GetUser(id)
 	if err != nil {
 		return &models.PrivateUser{}, err
 	}
@@ -22,7 +22,7 @@ func GetUser(id string) (*models.PrivateUser, error) {
 }
 
 func GetUserByID(id string) (*models.PublicUser, error) {
-	u, err := managers.GetUser(id)
+	u, err := users.GetUser(id)
 	if err != nil {
 		return &models.PublicUser{}, err
 	}
@@ -36,9 +36,8 @@ func GetUserByID(id string) (*models.PublicUser, error) {
 	return resp, nil
 }
 
-// FindUser ...
 func FindUser(username string) ([]*models.PublicUserWithoutFriends, error) {
-	u, err := managers.FindUser(username)
+	u, err := users.FindUser(username)
 	if err != nil {
 		return []*models.PublicUserWithoutFriends{}, err
 	}

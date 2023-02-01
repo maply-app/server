@@ -6,45 +6,44 @@ import (
 	"github.com/ulule/deepcopier"
 	"maply/errors"
 	"maply/models"
-	"maply/repository/managers"
+	chatDBManager "maply/repository/managers/chat"
+	friendsDBManager "maply/repository/managers/friends"
+	"maply/services/users"
 	"maply/ws"
 	"time"
 )
 
 func SendMessage(r *models.Message) error {
-	if !managers.CheckFriendByID(r.SenderID, r.ReceiverID) {
+	if !friendsDBManager.CheckFriendByID(r.SenderID, r.ReceiverID) {
 		return errors.ObjectDoesNotExists
 	}
 
 	// Create a message
 	r.ID = uuid.New().String()
 	r.CreatedAt = time.Now()
-	if err := managers.CreateMessage(r); err != nil {
+	if err := chatDBManager.CreateMessage(r); err != nil {
 		return err
 	}
 
 	resp := &models.MessageWithSender{}
 	resp.Sender = &models.PublicUserWithoutFriends{}
-	u, _ := managers.GetUser(r.SenderID)
+	u, _ := users.GetUser(r.SenderID)
 	deepcopier.Copy(resp.Sender).From(u)
 	deepcopier.Copy(resp).From(r)
 
-	// Send socket event
 	ws.NewEvent(r.ReceiverID, ws.NewMessage, resp)
 	return nil
 }
 
 func GetMessages(userId, receiverId string, count, offset int) ([]*models.MessageWithoutSender, error) {
 	if offset == 0 {
-		if err := managers.ReadMessages(receiverId, userId); err != nil {
+		if err := chatDBManager.ReadMessages(receiverId, userId); err != nil {
 			return []*models.MessageWithoutSender{}, err
 		}
-
-		// Send socket event
 		ws.NewEvent(receiverId, ws.Readessages, fiber.Map{"userId": userId})
 	}
 
-	r, err := managers.GetMessages(userId, receiverId, count, offset)
+	r, err := chatDBManager.GetMessages(userId, receiverId, count, offset)
 	if err != nil {
 		return []*models.MessageWithoutSender{}, err
 	}
@@ -58,10 +57,9 @@ func GetMessages(userId, receiverId string, count, offset int) ([]*models.Messag
 }
 
 func ReadMessages(userId, senderId string) error {
-	if err := managers.ReadMessages(senderId, userId); err != nil {
+	if err := chatDBManager.ReadMessages(senderId, userId); err != nil {
 		return err
 	}
-
-	// Send socket event
-	return ws.NewEvent(senderId, ws.Readessages, fiber.Map{"userId": userId})
+	ws.NewEvent(senderId, ws.Readessages, fiber.Map{"userId": userId})
+	return nil
 }

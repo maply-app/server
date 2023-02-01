@@ -4,9 +4,9 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"maply/api/core"
 	friendsSerializers "maply/api/serializers/friends"
+	"maply/core/validators"
 	"maply/errors"
 	"maply/services/friends"
-	"maply/services/validators"
 	"net/http"
 )
 

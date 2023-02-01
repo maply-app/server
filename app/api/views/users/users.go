@@ -4,8 +4,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"maply/api/core"
 	usersSerializers "maply/api/serializers/users"
+	"maply/core/validators"
 	"maply/services/users"
-	"maply/services/validators"
 	"net/http"
 )
 

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"maply/cache/managers/stats"
 	"maply/models"
-	"maply/repository/managers"
+	friendsDBManager "maply/repository/managers/friends"
 	"maply/ws"
 	"time"
 )
@@ -21,7 +21,7 @@ func UpdateStats(userId string, s *models.Stats) error {
 }
 
 func GetStats(userId string) {
-	friends, err := managers.GetFriendsId(userId)
+	friends, err := friendsDBManager.GetFriendsId(userId)
 	if err != nil || len(friends) == 0 {
 		return
 	}
@@ -46,6 +46,5 @@ func GetStats(userId string) {
 		}
 	}
 
-	// Send socket event
 	ws.NewEvent(userId, ws.FriendsStats, friendsStats)
 }

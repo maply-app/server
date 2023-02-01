@@ -3,8 +3,8 @@ package auth
 import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"maply/core/validators"
 	"maply/models"
-	"maply/services/validators"
 )
 
 func RegisterSerializer(c *fiber.Ctx) (*models.User, bool) {

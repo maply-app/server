@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"github.com/valyala/fasthttp"
 	"maply/config"
+	"maply/core/utils"
 	"maply/models"
-	"maply/repository/managers"
-	"maply/services/utils"
+	"maply/repository/managers/users"
 )
 
 func Settings(userId string, s *models.Settings) error {
-	u, err := managers.GetUser(userId)
+	u, err := users.GetUser(userId)
 	if err != nil {
 		return err
 	}
@@ -29,7 +29,7 @@ func Settings(userId string, s *models.Settings) error {
 		s.Avatar.Filename = avatar
 	}
 
-	err = managers.UpdateUser(u.ID, s)
+	err = users.UpdateUser(u.ID, s)
 	if err != nil {
 		return err
 	}

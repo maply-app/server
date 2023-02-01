@@ -1,4 +1,4 @@
-package managers
+package users
 
 import (
 	"maply/models"
