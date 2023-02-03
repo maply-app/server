@@ -43,6 +43,7 @@ type PublicUser struct {
 	Username string                      `json:"username"`
 	Avatar   string                      `json:"avatar"`
 	Friends  []*PublicUserWithoutFriends `json:"friends"`
+	Info     *UserInfo                   `json:"info"`
 	IsAdmin  bool                        `json:"isAdmin"`
 }
 

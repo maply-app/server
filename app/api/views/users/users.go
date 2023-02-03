@@ -37,7 +37,7 @@ func GetByID(c *fiber.Ctx) error {
 		return core.Send(c, core.Error(core.ValidationError))
 	}
 
-	u, err := users.GetUserByID(input)
+	u, err := users.GetUserByID(c.Locals("user").(string), input)
 	if err != nil {
 		return core.Send(c, core.Error(core.ObjectNotFound))
 	}
