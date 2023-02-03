@@ -2,9 +2,9 @@ package auth
 
 import (
 	"maply/config"
+	utils2 "maply/core/utils"
 	"maply/models"
-	"maply/repository/managers"
-	"maply/services/utils"
+	"maply/repository/managers/auth"
 )
 
 func GenerateToken(email, password string) (string, error) {
@@ -14,12 +14,12 @@ func GenerateToken(email, password string) (string, error) {
 		err   error
 	)
 
-	user, err = managers.CheckUser(email, utils.HashPassword(password))
+	user, err = auth.CheckUser(email, utils2.HashPassword(password))
 	if err != nil {
 		return token, err
 	}
 
-	token, err = utils.GenerateJWT(user.ID, config.C.Auth.TTL)
+	token, err = utils2.GenerateJWT(user.ID, config.C.Auth.TTL)
 	if err != nil {
 		return token, err
 	}

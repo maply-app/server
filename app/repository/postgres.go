@@ -5,7 +5,6 @@ import (
 	log "github.com/sirupsen/logrus"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 	"maply/config"
 	"maply/models"
 )
@@ -25,9 +24,7 @@ func InitPostgres(cfg config.PostgresConfig) {
 	//DB, err = gorm.Open(postgres.Open(connectionString), &gorm.Config{
 	//	Logger: logger.Default.LogMode(logger.Info),
 	//})
-	DB, err = gorm.Open(postgres.Open(connectionString), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
-	})
+	DB, err = gorm.Open(postgres.Open(connectionString))
 	if err != nil {
 		log.Fatalf("Failed to initialize PostgreSQL: %s", err.Error())
 	}

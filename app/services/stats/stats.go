@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"maply/cache/managers/stats"
 	"maply/models"
-	"maply/repository/managers"
+	friendsDBManager "maply/repository/managers/friends"
 	"maply/ws"
 	"time"
 )
@@ -21,7 +21,7 @@ func UpdateStats(userId string, s *models.Stats) error {
 }
 
 func GetStats(userId string) {
-	friends, err := managers.GetFriendsId(userId)
+	friends, err := friendsDBManager.GetFriendsId(userId)
 	if err != nil || len(friends) == 0 {
 		return
 	}
@@ -29,7 +29,7 @@ func GetStats(userId string) {
 	var friendsStats = make(map[string]*models.Stats)
 	s, err := stats.GetFriendsStats(friends)
 	for i := range s {
-		friendsId := friends[i]
+		friendId := friends[i]
 		m := &models.Stats{}
 
 		if s[i] != nil {
@@ -39,13 +39,12 @@ func GetStats(userId string) {
 			}
 
 			// Update online status
-			if ws.GetClientConnection(friendsId) != nil {
+			if ws.GetClientConnection(friendId) != nil {
 				m.IsOnline = true
 			}
-			friendsStats[friendsId] = m
+			friendsStats[friendId] = m
 		}
 	}
 
-	// Send socket event
 	ws.NewEvent(userId, ws.FriendsStats, friendsStats)
 }

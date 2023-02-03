@@ -3,11 +3,11 @@ package chat
 import (
 	"github.com/ulule/deepcopier"
 	"maply/models"
-	"maply/repository/managers"
+	chatDBManager "maply/repository/managers/chat"
 )
 
 func GetChats(userId string, count, offset int) ([]*models.Chat, error) {
-	r, err := managers.GetChats(userId, count, offset)
+	r, err := chatDBManager.GetChats(userId, count, offset)
 	if err != nil {
 		return []*models.Chat{}, err
 	}
@@ -16,7 +16,7 @@ func GetChats(userId string, count, offset int) ([]*models.Chat, error) {
 	for i := range r {
 		var unRead = 0
 		if r[i].SenderID != userId {
-			u, err := managers.GetUnreadMessages(r[i].SenderID, r[i].ReceiverID)
+			u, err := chatDBManager.GetUnreadMessages(r[i].SenderID, r[i].ReceiverID)
 			if err != nil {
 				return []*models.Chat{}, err
 			}

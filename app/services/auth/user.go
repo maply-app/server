@@ -2,9 +2,9 @@ package auth
 
 import (
 	"github.com/google/uuid"
+	"maply/core/utils"
 	"maply/models"
-	"maply/repository/managers"
-	"maply/services/utils"
+	"maply/repository/managers/auth"
 	"time"
 )
 
@@ -14,5 +14,5 @@ func CreateUser(u *models.User) (string, error) {
 	u.Password = utils.HashPassword(u.Password)
 	u.CreatedAt = now
 	u.UpdatedAt = now
-	return managers.CreateUser(u)
+	return auth.CreateUser(u)
 }

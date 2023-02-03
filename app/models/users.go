@@ -22,14 +22,19 @@ type User struct {
 
 // Output structures
 
+type UserInfo struct {
+	Coords *Stats `json:"coords"`
+}
+
 type PrivateUser struct {
-	ID       string                      `json:"id"`
-	Name     string                      `json:"name"`
-	Username string                      `json:"username"`
-	Email    string                      `json:"email"`
-	Avatar   string                      `json:"avatar"`
-	Friends  []*PublicUserWithoutFriends `json:"friends"`
-	IsAdmin  bool                        `json:"isAdmin"`
+	ID       string    `json:"id"`
+	Name     string    `json:"name"`
+	Username string    `json:"username"`
+	Email    string    `json:"email"`
+	Avatar   string    `json:"avatar"`
+	Friends  []*Friend `json:"friends"`
+	Info     *UserInfo `json:"info"`
+	IsAdmin  bool      `json:"isAdmin"`
 }
 
 type PublicUser struct {
@@ -47,4 +52,13 @@ type PublicUserWithoutFriends struct {
 	Username string `json:"username"`
 	Avatar   string `json:"avatar"`
 	IsAdmin  bool   `json:"isAdmin"`
+}
+
+type Friend struct {
+	ID       string    `json:"id"`
+	Name     string    `json:"name"`
+	Username string    `json:"username"`
+	Avatar   string    `json:"avatar"`
+	Info     *UserInfo `json:"info"`
+	IsAdmin  bool      `json:"isAdmin"`
 }

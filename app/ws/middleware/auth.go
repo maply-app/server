@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"maply/core/utils"
 	"maply/errors"
-	"maply/services/utils"
 )
 
 func UserIdentity(c *fiber.Ctx) error {

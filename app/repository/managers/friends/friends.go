@@ -1,4 +1,4 @@
-package managers
+package friends
 
 import (
 	"maply/repository"

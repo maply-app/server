@@ -3,7 +3,7 @@ package middleware
 import (
 	"github.com/gofiber/fiber/v2"
 	"maply/api/core"
-	"maply/services/utils"
+	"maply/core/utils"
 	"strings"
 )
 
