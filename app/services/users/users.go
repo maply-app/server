@@ -59,10 +59,19 @@ func GetUser(userId string) (*models.PrivateUser, error) {
 	return resp, nil
 }
 
-func GetUserByID(id string) (*models.PublicUser, error) {
-	u, err := users.GetUser(id)
+func GetUserByID(selfId, userId string) (*models.PublicUser, error) {
+	u, err := users.GetUser(userId)
 	if err != nil {
 		return &models.PublicUser{}, err
+	}
+
+	// Is it friends?
+	isFriend := false
+	for i := range u.Friends {
+		if u.Friends[i].ID == selfId {
+			isFriend = true
+			break
+		}
 	}
 
 	resp := &models.PublicUser{}
@@ -71,6 +80,13 @@ func GetUserByID(id string) (*models.PublicUser, error) {
 		deepcopier.Copy(resp.Friends[i]).From(u.Friends[i])
 	}
 	deepcopier.Copy(resp).From(u)
+
+	// Get user info
+	if isFriend {
+		i, _ := setupUserInfo(userId)
+		resp.Info = i
+	}
+
 	return resp, nil
 }
 
