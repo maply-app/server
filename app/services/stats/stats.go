@@ -29,7 +29,7 @@ func GetStats(userId string) {
 	var friendsStats = make(map[string]*models.Stats)
 	s, err := stats.GetFriendsStats(friends)
 	for i := range s {
-		friendsId := friends[i]
+		friendId := friends[i]
 		m := &models.Stats{}
 
 		if s[i] != nil {
@@ -39,10 +39,10 @@ func GetStats(userId string) {
 			}
 
 			// Update online status
-			if ws.GetClientConnection(friendsId) != nil {
+			if ws.GetClientConnection(friendId) != nil {
 				m.IsOnline = true
 			}
-			friendsStats[friendsId] = m
+			friendsStats[friendId] = m
 		}
 	}
 

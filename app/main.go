@@ -33,8 +33,10 @@ func main() {
 	cache.InitRedis(cfg.Redis)
 
 	// Initialise Fiber web server
-	app := fiber.New(fiber.Config{ServerHeader: "IDI_NAHUI", Prefork: false}) // true
+	app := fiber.New(fiber.Config{ServerHeader: "Maply-Server", Prefork: false}) // true
 	app.Use(cors.New())
+
+	// Setup server
 	api.SetupRoutes(app)
 	ws.SetupRoutes(app)
 	addr := fmt.Sprintf("%s:%s", cfg.HTTP.Host, cfg.HTTP.Port)
