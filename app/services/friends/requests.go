@@ -35,8 +35,8 @@ func SendRequest(r *models.Request) (string, error) {
 	deepcopier.Copy(resp.Sender).From(u)
 	deepcopier.Copy(resp).From(r)
 
-	err = ws.NewEvent(r.ReceiverID, ws.SendRequest, resp)
-	return requestID, err
+	ws.NewEvent(r.ReceiverID, ws.SendRequest, resp)
+	return requestID, nil
 }
 
 func GetReceivedRequests(userId string) ([]*models.PrivateRequestWithSender, error) {
