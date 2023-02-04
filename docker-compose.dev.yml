@@ -57,7 +57,7 @@ services:
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
     links:
-      - alertmanager:alertmanager
+      - alertmanager
     ports:
       - "9090:9090"
 

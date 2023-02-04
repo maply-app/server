@@ -9,6 +9,7 @@ import (
 	"maply/api"
 	"maply/cache"
 	"maply/config"
+	prometheusMiddleware "maply/prometheus"
 	"maply/repository"
 	"maply/ws"
 	"os"
@@ -35,6 +36,11 @@ func main() {
 	// Initialise Fiber web server
 	app := fiber.New(fiber.Config{ServerHeader: "Maply-Server", Prefork: false}) // true
 	app.Use(cors.New())
+
+	// Setup prometheus
+	prometheus := prometheusMiddleware.New("maply-server")
+	prometheus.RegisterAt(app, "/metrics")
+	app.Use(prometheus.Middleware)
 
 	// Setup server
 	api.SetupRoutes(app)
