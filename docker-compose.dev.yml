@@ -38,3 +38,41 @@ services:
       - ./app/media:/usr/src/app/media
     depends_on:
       - web
+
+  alertmanager:
+    hostname: alertmanager
+    image: prom/alertmanager
+    volumes:
+      - ./alertmanager.conf:/etc/alertmanager/alertmanager.conf
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.conf"
+    ports:
+      - "9093:9093"
+
+  prometheus:
+    hostname: prometheus
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./alert_rules.yml:/etc/prometheus/alert_rules.yml
+      - prometheus_data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    links:
+      - alertmanager:alertmanager
+    ports:
+      - "9090:9090"
+
+  grafana:
+    hostname: grafana
+    image: grafana/grafana
+    volumes:
+      - ./grafana_datasources.yml:/etc/grafana/provisioning/datasources/all.yaml
+      - ./grafana_config.ini:/etc/grafana/config.ini
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+
+volumes:
+  prometheus_data: {}
+  grafana_data: {}
