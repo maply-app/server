@@ -56,8 +56,9 @@ services:
       - prometheus_data:/prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
-    links:
+    depends_on:
       - alertmanager
+      - web
     ports:
       - "9090:9090"
 
@@ -67,6 +68,8 @@ services:
       - ./etc/grafana/datasources/datasources.yml:/etc/grafana/provisioning/datasources/all.yaml
       - ./etc/grafana/config/config.ini:/etc/grafana/config.ini
       - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
     ports:
       - "3000:3000"
 
