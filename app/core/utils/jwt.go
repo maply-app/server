@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"github.com/golang-jwt/jwt"
 	"maply/config"
 	"time"
@@ -12,7 +13,8 @@ func GenerateJWT(userId string, ttl time.Duration) (string, error) {
 		IssuedAt:  time.Now().Unix(),
 		Subject:   userId,
 	})
-	return token.SignedString(config.C.Auth.SigningKey)
+	fmt.Println([]byte(config.C.Auth.SigningKey))
+	return token.SignedString([]byte(config.C.Auth.SigningKey))
 }
 
 func ParseToken(authToken string) (string, error) {
@@ -20,7 +22,7 @@ func ParseToken(authToken string) (string, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, err
 		}
-		return config.C.Auth.SigningKey, nil
+		return []byte(config.C.Auth.SigningKey), nil
 	})
 	if err != nil {
 		return "", err

@@ -28,6 +28,7 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	t, err := auth.GenerateToken(input.Email, input.Password)
+
 	if err != nil {
 		return core.Send(c, core.Error(core.Unauthorized))
 	}

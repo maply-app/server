@@ -1,10 +1,6 @@
 package settings
 
 import (
-	"fmt"
-	"github.com/valyala/fasthttp"
-	"maply/config"
-	"maply/core/utils"
 	"maply/models"
 	"maply/repository/managers/users"
 )
@@ -23,10 +19,8 @@ func Settings(userId string, s *models.Settings) error {
 		s.Username = u.Username
 	}
 
-	if s.Avatar != nil && s.Avatar.Size != 0 {
-		var avatar = fmt.Sprintf("%s.jpg", utils.HashFileName(s.Avatar.Filename))
-		fasthttp.SaveMultipartFile(s.Avatar, config.C.App.BaseDir+config.C.App.MediaDir+avatar)
-		s.Avatar.Filename = avatar
+	if s.Username == "" {
+		s.Avatar = u.Avatar
 	}
 
 	err = users.UpdateUser(u.ID, s)
