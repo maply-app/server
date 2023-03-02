@@ -16,12 +16,12 @@ func Send(c *fiber.Ctx) error {
 		return core.Send(c, core.Error(core.ValidationError))
 	}
 
-	err := chat.SendMessage(input)
+	obj, err := chat.SendMessage(input)
 	switch err {
 	case errors.ObjectDoesNotExists:
 		return core.Send(c, core.Error(core.ObjectNotFound))
 	case nil:
-		return core.Send(c, core.Success(http.StatusOK, nil))
+		return core.Send(c, core.Success(http.StatusOK, obj))
 	default:
 		return core.Send(c, core.Error(core.ValidationError))
 	}

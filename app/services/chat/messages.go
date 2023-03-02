@@ -13,16 +13,16 @@ import (
 	"time"
 )
 
-func SendMessage(r *models.Message) error {
+func SendMessage(r *models.Message) (*models.MessageWithSender, error) {
 	if !friendsDBManager.CheckFriendByID(r.SenderID, r.ReceiverID) {
-		return errors.ObjectDoesNotExists
+		return nil, errors.ObjectDoesNotExists
 	}
 
 	// Create a message
 	r.ID = uuid.New().String()
 	r.CreatedAt = time.Now()
 	if err := chatDBManager.CreateMessage(r); err != nil {
-		return err
+		return nil, err
 	}
 
 	resp := &models.MessageWithSender{}
@@ -32,7 +32,7 @@ func SendMessage(r *models.Message) error {
 	deepcopier.Copy(resp).From(r)
 
 	ws.NewEvent(r.ReceiverID, ws.NewMessage, resp)
-	return nil
+	return resp, nil
 }
 
 func GetMessages(userId, receiverId string, count, offset int) ([]*models.MessageWithoutSender, error) {
