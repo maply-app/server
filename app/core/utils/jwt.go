@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"github.com/golang-jwt/jwt"
 	"maply/config"
 	"time"
@@ -13,7 +12,6 @@ func GenerateJWT(userId string, ttl time.Duration) (string, error) {
 		IssuedAt:  time.Now().Unix(),
 		Subject:   userId,
 	})
-	fmt.Println([]byte(config.C.Auth.SigningKey))
 	return token.SignedString([]byte(config.C.Auth.SigningKey))
 }
 
