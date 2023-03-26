@@ -7,10 +7,20 @@ services:
       - .env
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   redis:
     image: redis:7.0.7-alpine
     restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   web:
     build: ./app
@@ -22,6 +32,11 @@ services:
     depends_on:
       - postgresql
       - redis
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   nginx:
     build: ./nginx
@@ -31,6 +46,11 @@ services:
       - media_volume:/usr/src/app/media
     depends_on:
       - web
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 volumes:
   media_volume:
