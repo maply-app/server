@@ -4,8 +4,8 @@ import "unicode"
 
 func Password(pass string) bool {
 	var (
-		upp, low, num, sym bool
-		tot                uint8
+		upp, low, num bool
+		tot           uint8
 	)
 
 	for _, char := range pass {
@@ -19,15 +19,12 @@ func Password(pass string) bool {
 		case unicode.IsNumber(char):
 			num = true
 			tot++
-		case unicode.IsPunct(char) || unicode.IsSymbol(char):
-			sym = true
-			tot++
 		default:
 			return false
 		}
 	}
 
-	if !upp || !low || !num || !sym || tot < 8 {
+	if !upp || !low || !num || tot < 8 {
 		return false
 	}
 
